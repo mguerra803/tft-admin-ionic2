@@ -1,0 +1,23 @@
+.deliveryMap-page {
+  width: 96%;
+  height: 200px !important;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+  //opacity: 0;
+  transition: opacity 150ms ease-in
+}
+
+.next-order{
+  background-color: #ccffb3;
+}
+
+.text{
+  padding-left: 17px;
+}
+
+.deliveryImage{
+  max-height: 197px;
+}

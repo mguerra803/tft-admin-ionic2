@@ -1,0 +1,48 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <ion-title>Vehiculos</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>  
+
+    <ion-grid>
+        <ion-row>
+            <ion-col col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 *ngFor="let car of vehicles">
+                <ion-card>
+                    <ion-item>
+                        <ion-avatar item-left>
+                            <img src={{car.imagen}}>
+                        </ion-avatar>
+                        <ion-card-header>
+                            {{car.matricula}}
+                        </ion-card-header>
+                    </ion-item>
+                        
+                        <ion-card-content>
+                            <ion-row>
+                                <ion-col col-10>
+                                    <p><b>Modelo:</b> {{car.modelo}}</p>
+                                    <p><b>Fecha de última revisión:</b> {{car.ultimaRevision | date:'dd/MM/yy'}}</p>
+                                    <p><b>Capacidad de carga:</b> {{car.carga}} Kg</p>
+                                    <p><b>Disponibilidad:</b> <ion-badge [color]="getCorrectColor(car)">{{car.disponibilidad}}</ion-badge></p>
+                                    <p *ngIf="car.repartidor"><b>Repartidor asignado:</b> {{car.repartidor}}</p>
+                                    <p *ngIf="!car.repartidor"><b>Repartidor asignado:</b> Ninguno</p>
+                                </ion-col>
+
+                                <ion-col col-2>                               
+                                    <button ion-button icon-only (click)="newRevision(car)">
+                                        <ion-icon name="build"></ion-icon>
+                                    </button>
+                                </ion-col>
+                            </ion-row>
+
+                            
+                        </ion-card-content>
+                    </ion-card>
+
+            </ion-col>
+        </ion-row>
+    </ion-grid>   
+
+</ion-content>

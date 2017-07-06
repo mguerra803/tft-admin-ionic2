@@ -1,0 +1,57 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <ion-title>{{deliverer.nombre}}</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+    <ion-row >
+        <ng-container *ngFor="let codsPostales of orders">
+            <ion-col col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 *ngIf="codsPostales.length != 0">
+                <ion-card>
+                    <ion-item-divider color="secondary">
+                        {{codsPostales.codPos}}
+                    </ion-item-divider>
+
+                    <ion-list >
+                        <ion-item-group>
+                            <button *ngFor="let item of codsPostales.pedido" ion-item icon-right outline (click)="goToOrder($event, item)">
+                                <ion-row>
+                                    <ion-col col-10>
+                                        <h1>{{item.idPaquete}}</h1>
+                                        <h2><b>Remitente:</b> {{item.remitente}}</h2>
+                                        <h3><b>Dirección:</b> {{item.direccion}}</h3>
+                                        <p><b>Fech. Entrada:</b> {{item.fechaEntradaAlmacen | date:'dd/MM/yy'}} - {{item.fechaEntradaAlmacen | date:'shortTime'}}</p>
+                                    </ion-col>
+                                    <ion-col col-2>
+                                        <br>
+                                        <ion-icon *ngIf="item.urgente" name="alert"></ion-icon>
+                                    </ion-col>
+                                </ion-row>
+                            </button>
+                        </ion-item-group>
+                    </ion-list>
+
+                </ion-card>
+
+            </ion-col>
+        </ng-container>
+    </ion-row>
+
+    <ion-card class="assignedMap-page" *ngIf="orders.length != 0">
+        <agm-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom" >
+            <ng-container *ngFor="let codPos of orders">
+                <ng-container *ngFor="let order of codPos.pedido">
+                    <agm-marker [latitude]="order.latitud" [longitude]="order.longitud">
+                        <agm-info-window >
+                            <strong>{{order.idPaquete}}</strong>
+                        </agm-info-window>
+                    </agm-marker>
+                </ng-container>
+            </ng-container>
+        </agm-map>
+    </ion-card>
+
+    
+</ion-content>

@@ -1,0 +1,164 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <button ion-button menuToggle item-left>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+
+        <ion-title>Portada</ion-title>
+
+    </ion-navbar>
+  
+     <ion-toolbar no-border-top>
+        <ion-segment secondary [(ngModel)]="orderFilter">
+            <ion-segment-button value="notAssigned">
+                Sin Asignar
+            </ion-segment-button>
+            <ion-segment-button value="assigned">
+                Asignados
+            </ion-segment-button>
+            <ion-segment-button value="error">
+                Incidencias
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card class="assignedMap-page">
+        <agm-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom">
+            <ng-container *ngFor="let order of allOrders">
+                <agm-marker [latitude]="order.latitud" [longitude]="order.longitud" [iconUrl]="getCorrectColor(order)">
+                    <agm-info-window >
+                        <strong (click)="goToOrder($event, order)">{{order.idPaquete}}</strong>
+                    </agm-info-window>
+                </agm-marker>
+            </ng-container>
+        </agm-map>
+    </ion-card>
+
+    <div [ngSwitch]="orderFilter" >
+        <ion-grid *ngSwitchCase="'notAssigned'">
+            <ion-toolbar >
+                <ion-searchbar placeholder="Buscar" [(ngModel)]="queryText" (ionInput)="search()"></ion-searchbar>
+            </ion-toolbar>
+
+            <ion-row >
+                <ng-container *ngFor="let deliverers of nAssignedOrders">
+                    <ion-col col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 *ngIf="deliverers.length != 0">
+
+                        <ion-card>
+
+                            <ion-item-divider color="secondary">
+                                {{deliverers.codPos}}
+                            </ion-item-divider>
+                            
+                            <ion-list >
+                                <ion-item-group>
+
+                                    <button *ngFor="let order of deliverers.pedido" ion-item icon-right outline (click)="goToOrder($event, order)">
+                                        <ion-row>
+                                            <ion-col col-10>
+                                                <h1>{{order.idPaquete}}</h1>
+                                                <h2><b>Remitente:</b> {{order.remitente}}</h2>
+                                                <h3><b>Dirección:</b> {{order.direccion}}</h3>
+                                                <p><b>Fech. Entrada:</b> {{order.fechaEntradaAlmacen | date:'dd/MM/yy'}} - {{order.fechaEntradaAlmacen | date:'shortTime'}}</p>
+                                                
+                                            </ion-col>
+                                            <ion-col col-2>
+                                                <br>
+                                                <ion-icon *ngIf="order.urgente" name="alert"></ion-icon>
+                                            </ion-col>
+                                        </ion-row>
+                                        </button>
+
+                                </ion-item-group>
+                            </ion-list>
+
+                        </ion-card>
+
+                    </ion-col>
+                </ng-container>
+                
+            </ion-row>
+        </ion-grid>
+
+        <ion-grid *ngSwitchCase="'assigned'">
+            <ion-toolbar >
+                <ion-searchbar placeholder="Buscar" [(ngModel)]="queryTextAssigned" (ionInput)="assignedSearch()"></ion-searchbar>
+            </ion-toolbar>
+            <ion-row >
+                <ng-container *ngFor="let deliverers of assignedOrders">
+                    <ion-col col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 *ngIf="deliverers.length != 0">
+
+                        <ion-card>
+                            <ion-item-divider color="secondary">
+                                {{deliverers.repart}}
+                            </ion-item-divider>
+                            
+                            <ion-list >
+                                <ion-item-group>
+
+                                    <button *ngFor="let order of deliverers.pedido" ion-item icon-right outline (click)="goToOrder($event, order)">
+                                        <ion-row>
+                                            <ion-col col-10>
+                                                <h1><b>{{order.idPaquete}}</b></h1>
+                                                <h2><b>Remitente:</b> {{order.remitente}}</h2>
+                                                <h3><b>Dirección:</b> {{order.direccion}}</h3>
+                                                <p><b>Fech. Entrada:</b> {{order.fechaEntradaAlmacen | date:'dd/MM/yy'}} - {{order.fechaEntradaAlmacen | date:'shortTime'}}</p>
+                                                
+                                            </ion-col>
+                                            <ion-col col-2>
+                                                <br>
+                                                <ion-icon *ngIf="order.urgente" name="alert"></ion-icon>
+                                            </ion-col>
+                                        </ion-row>
+                                        </button>
+
+                                </ion-item-group>
+                            </ion-list>
+
+                        </ion-card>
+
+                    </ion-col>
+                </ng-container>
+                
+            </ion-row>
+        </ion-grid>
+
+        <ion-grid *ngSwitchCase="'error'">
+             <ion-row >
+                <ng-container *ngFor="let order of ordersError">
+                    <ion-col col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 *ngIf="order.length != 0">
+
+                        <ion-card> 
+                            <ion-list >
+                                <ion-item ion-item icon-right outline>
+                                    <ion-row>
+                                        <ion-col col-10>
+                                            <h1>{{order.idPaquete}}</h1>
+                                            <h2><b>Remitente:</b> {{order.remitente}}</h2>
+                                            <h3><b>Dirección:</b>{{order.direccion}}</h3>
+                                            <p><b>Fech. Entrada:</b> {{order.fechaEntradaAlmacen | date:'dd/MM/yy'}} - {{order.fechaEntradaAlmacen | date:'shortTime'}}</p>
+                                            <p><b>Incidencia: </b>{{order.observaciones}}</p>
+                                            
+                                        </ion-col>
+                                        <ion-col col-2>
+                                            <br>
+                                            <ion-icon *ngIf="order.urgente" name="alert"></ion-icon>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-item>
+                            </ion-list>
+
+                        </ion-card>
+
+                    </ion-col>
+                </ng-container>
+                
+            </ion-row>
+        </ion-grid>
+
+    </div>
+        
+
+</ion-content>

@@ -1,0 +1,19 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <ion-title>Geolocalización de repartidores</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content class="location-page">
+
+    <agm-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom" >
+        <ng-container *ngFor="let deliveryMan of deliverer">
+            <agm-marker [latitude]="deliveryMan.latitud" [longitude]="deliveryMan.longitud" [iconUrl]="getCorrectColor(deliveryMan)">
+                <agm-info-window >
+                    <strong (click)="goToDeliverer($event, deliveryMan)">{{deliveryMan.nombre}}</strong>
+                </agm-info-window>
+            </agm-marker>
+        </ng-container>
+    </agm-map>
+
+</ion-content>

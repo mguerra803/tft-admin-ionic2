@@ -1,0 +1,48 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <ion-title>{{deliverer.nombre}}</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+    <ion-row >
+        <ng-container *ngFor="let codsPostales of orders">
+            <ion-col col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 *ngIf="codsPostales.length != 0">
+                <ion-card>
+                    <ion-item-divider color="secondary">
+                        {{codsPostales.codPos}}
+                    </ion-item-divider>
+                    
+                    <ion-list >
+                        <ion-item-group>
+
+                            <ng-container *ngFor="let item of codsPostales.pedido">
+                                    <button ion-item icon-right outline (click)="goToOrder($event, item)">
+                                        <ion-row>
+                                            <ion-col col-10>
+                                                <h1>{{item.idPaquete}}</h1>
+                                                <h2><b>Remitente:</b> {{item.remitente}}</h2>
+                                                <h3><b>Dirección:</b> {{item.direccion}}</h3>
+                                                <p><b>Fech. Entrega:</b> {{item.fechaEntrega | date:'dd/MM/yy'}} - {{item.fechaEntrega | date:'shortTime'}}</p>
+                                                
+                                            </ion-col>
+                                            <ion-col col-2>
+                                                <br>
+                                                <ion-icon *ngIf="item.urgente" name="alert"></ion-icon>
+                                            </ion-col>
+                                        </ion-row>
+                                    </button>
+                            </ng-container>
+
+                        </ion-item-group>
+                    </ion-list>
+
+                </ion-card>
+
+            </ion-col>
+        </ng-container>
+        
+    </ion-row>
+
+</ion-content>
